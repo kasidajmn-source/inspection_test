@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>แบบฟอร์มตรวจสอบงานก่อสร้าง | Construction Checklist</title>
-<meta name="description" content="แบบฟอร์ม checklist ตรวจสอบงานก่อสร้าง บันทึกผล ผ่าน/ไม่ผ่าน/N.A. พร้อมออกเป็น PDF">
+<meta name="description" content="แบบฟอร์ม checklist ตรวจสอบงานก่อสร้าง ระบุชื่อโครงการ ผู้รับจ้าง ผู้ว่าจ้าง บันทึกผล ผ่าน/ไม่ผ่าน/N.A. พร้อมออกเป็น PDF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,44 +23,36 @@
   --bg-2:#FAFAFA;
   --red:#C0392B;
   --radius:10px;
-  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
   font-family:"Sarabun",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg-2);
-  color:var(--ink);
-  font-size:15px;
-  line-height:1.6;
+  background:var(--bg-2);color:var(--ink);font-size:15px;line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
-input,textarea{background:transparent}
+button,input,textarea{font-family:inherit;font-size:inherit;color:inherit}
+input{background:transparent}
+
+/* editable cells */
+.ce{
+  white-space:pre-wrap;word-break:break-word;outline:none;
+  border:1px solid transparent;border-radius:6px;padding:4px 7px;min-height:1.6em;
+}
+.ce:empty::before{content:attr(data-ph);color:#BDBDBD;pointer-events:none}
+.ce:hover{border-color:var(--line)}
+.ce:focus{border-color:var(--yellow);background:#fff}
 
 /* ---------- Toolbar ---------- */
-.toolbar{
-  position:sticky;top:0;z-index:50;
-  background:rgba(255,255,255,.92);
-  backdrop-filter:saturate(180%) blur(12px);
-  border-bottom:1px solid var(--line);
-}
-.toolbar-inner{
-  max-width:1120px;margin:0 auto;padding:10px 20px;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-}
+.toolbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.93);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+.toolbar-inner{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-.01em;margin-right:auto}
-.brand-mark{
-  width:26px;height:26px;border-radius:7px;background:var(--yellow);
-  display:grid;place-items:center;flex:none;
-}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--yellow);display:grid;place-items:center;flex:none}
 .brand-mark svg{width:15px;height:15px}
 .brand small{display:block;font-weight:400;font-size:11px;color:var(--ink-3);line-height:1.2;letter-spacing:0}
-.btn{
-  border:1px solid var(--line);background:#fff;border-radius:8px;
-  padding:7px 13px;cursor:pointer;font-size:13.5px;font-weight:500;
-  display:inline-flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap;
-}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;cursor:pointer;
+  font-size:13.5px;font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap}
 .btn:hover{border-color:var(--ink-3);background:var(--bg-2)}
 .btn:active{transform:translateY(1px)}
 .btn-primary{background:var(--yellow);border-color:var(--yellow);font-weight:600}
@@ -68,127 +60,85 @@ input,textarea{background:transparent}
 .btn-ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
 .btn-ghost:hover{background:var(--line-2);border-color:transparent}
 .btn-danger:hover{border-color:var(--red);color:var(--red);background:#fff}
-.btn svg{width:14px;height:14px;flex:none}
-.saved-tag{font-size:12px;color:var(--ink-3);margin-left:2px;white-space:nowrap}
+.saved-tag{font-size:12px;color:var(--ink-3);white-space:nowrap}
 
 /* ---------- Page ---------- */
-.page{
-  max-width:1120px;margin:22px auto 60px;background:#fff;
-  border:1px solid var(--line);border-radius:14px;padding:34px 38px 42px;
-}
+.page{max-width:1120px;margin:22px auto 60px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:34px 38px 42px}
 .doc-head{display:flex;gap:22px;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:22px}
-.doc-head .logo-box{
-  width:64px;height:64px;border-radius:12px;background:var(--yellow);flex:none;
-  display:grid;place-items:center;overflow:hidden;position:relative;cursor:pointer;
-}
-.doc-head .logo-box svg{width:32px;height:32px}
-.doc-head .logo-box img{width:100%;height:100%;object-fit:contain;background:#fff}
+.logo-box{width:64px;height:64px;border-radius:12px;background:var(--yellow);flex:none;
+  display:grid;place-items:center;overflow:hidden;cursor:pointer}
+.logo-box svg{width:32px;height:32px}
+.logo-box img{width:100%;height:100%;object-fit:contain;background:#fff}
 .doc-title-wrap{flex:1;min-width:0}
-.doc-title{
-  font-size:24px;font-weight:700;letter-spacing:-.02em;width:100%;
-  border:none;padding:0;outline:none;
-}
-.doc-subtitle{
-  font-size:13.5px;color:var(--ink-2);width:100%;border:none;padding:0;outline:none;margin-top:2px;
-}
-.doc-title:focus,.doc-subtitle:focus{background:var(--yellow-soft)}
-.doc-meta{text-align:right;font-size:12px;color:var(--ink-3);flex:none;line-height:1.7}
-.doc-meta input{border:none;outline:none;text-align:right;width:120px;font-size:12px}
+.doc-title{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.3;padding-left:0;margin-left:-7px}
+.doc-subtitle{font-size:13.5px;color:var(--ink-2);margin-left:-7px}
+.doc-meta{text-align:right;font-size:12px;color:var(--ink-3);flex:none;line-height:1.9}
+.doc-meta input{border:none;outline:none;text-align:right;width:118px;font-size:12px;border-radius:4px;padding:1px 3px}
 .doc-meta input:focus{background:var(--yellow-soft)}
 
-h2.sec-label{
-  font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--ink-3);margin:0 0 12px;display:flex;align-items:center;gap:10px;
-}
+h2.sec-label{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 12px;display:flex;align-items:center;gap:10px}
 h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
 
-/* ---------- Info grid ---------- */
+/* ---------- Info ---------- */
 .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin-bottom:28px}
-.field{border-bottom:1px solid var(--line);padding:8px 0;display:flex;align-items:baseline;gap:10px}
-.field label{font-size:12.5px;color:var(--ink-2);flex:none;width:104px;font-weight:500}
-.field input{border:none;outline:none;flex:1;min-width:0;padding:2px 4px;border-radius:4px;font-weight:500}
-.field input:focus{background:var(--yellow-soft)}
+.field{border-bottom:1px solid var(--line);padding:6px 0;display:flex;align-items:flex-start;gap:8px}
+.field > label{font-size:12.5px;color:var(--ink-2);flex:none;width:108px;font-weight:500;padding-top:5px}
+.field .ce{flex:1;min-width:0;font-weight:500}
 .field.wide{grid-column:1 / -1}
 
 /* ---------- Summary ---------- */
-.summary{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:28px;
-}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:10px}
 .stat{background:#fff;padding:12px 14px}
 .stat b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
-.stat span{font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
+.stat span{font-size:11.5px;color:var(--ink-3)}
 .stat.is-total{background:var(--yellow-soft)}
 .stat.is-fail b{color:var(--red)}
-.progress{height:6px;background:var(--line-2);border-radius:99px;overflow:hidden;margin:-14px 0 28px}
+.progress{height:6px;background:var(--line-2);border-radius:99px;overflow:hidden;margin-bottom:28px}
 .progress i{display:block;height:100%;background:var(--yellow);width:0;transition:width .3s}
 
 /* ---------- Sections ---------- */
 .section{border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
-.section-head{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;
-  background:var(--yellow-soft);border-bottom:1px solid var(--yellow-line);
-}
-.section-no{
-  width:24px;height:24px;border-radius:6px;background:var(--ink);color:#fff;flex:none;
-  display:grid;place-items:center;font-size:12px;font-weight:700;
-}
-.section-title{
-  flex:1;border:none;outline:none;font-weight:700;font-size:15.5px;padding:3px 5px;border-radius:5px;min-width:0;
-}
+.section-head{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--yellow-soft);
+  border-bottom:1px solid var(--yellow-line)}
+.section-no{width:24px;height:24px;border-radius:6px;background:var(--ink);color:#fff;flex:none;
+  display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:2px}
+.section-title{flex:1;font-weight:700;font-size:15.5px;min-width:0}
 .section-title:focus{background:#fff}
-.section-count{font-size:11.5px;color:var(--ink-2);flex:none;white-space:nowrap}
+.section-count{font-size:11.5px;color:var(--ink-2);flex:none;white-space:nowrap;padding-top:6px}
 
-.row-head{
-  display:grid;grid-template-columns:38px 1fr 196px 200px 30px;gap:10px;
-  padding:7px 12px;border-bottom:1px solid var(--line);
-  font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase;
-}
-.item{
-  display:grid;grid-template-columns:38px 1fr 196px 200px 30px;gap:10px;
-  padding:9px 12px;border-bottom:1px solid var(--line-2);align-items:start;
-}
-.item:last-child{border-bottom:none}
+.row-head{display:grid;grid-template-columns:40px 1fr 190px 210px 28px;gap:10px;padding:7px 12px;
+  border-bottom:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.05em;
+  color:var(--ink-3);text-transform:uppercase}
+.item{display:grid;grid-template-columns:40px 1fr 190px 210px 28px;gap:10px;padding:8px 12px;
+  border-bottom:1px solid var(--line-2);align-items:start}
+.item:last-of-type{border-bottom:none}
 .item:hover{background:#FFFDF5}
-.item-no{font-size:12.5px;color:var(--ink-3);padding-top:6px;font-variant-numeric:tabular-nums}
+.item-no{font-size:12.5px;color:var(--ink-3);padding-top:5px;font-variant-numeric:tabular-nums}
 .item-main{min-width:0}
-.item-text,.item-ref,.item-note{
-  width:100%;border:1px solid transparent;outline:none;border-radius:6px;
-  padding:5px 7px;resize:none;overflow:hidden;line-height:1.5;display:block;
-}
-.item-text:hover,.item-ref:hover,.item-note:hover{border-color:var(--line)}
-.item-text:focus,.item-ref:focus,.item-note:focus{border-color:var(--yellow);background:#fff}
 .item-text{font-weight:500}
-.item-ref{font-size:12px;color:var(--ink-2);margin-top:1px}
+.item-ref{font-size:12px;color:var(--ink-2)}
 .item-note{font-size:13px}
-.item-note::placeholder,.item-ref::placeholder,.item-text::placeholder{color:#BDBDBD}
-
 .res{display:flex;gap:4px;padding-top:2px}
-.res button{
-  flex:1;border:1px solid var(--line);background:#fff;border-radius:7px;padding:5px 2px;
-  font-size:12.5px;font-weight:500;cursor:pointer;transition:.12s;
-}
+.res button{flex:1;border:1px solid var(--line);background:#fff;border-radius:7px;padding:5px 2px;
+  font-size:12.5px;font-weight:500;cursor:pointer;transition:.12s}
 .res button:hover{border-color:var(--ink-3)}
 .res button[data-on="1"][data-v="pass"]{background:var(--yellow);border-color:var(--yellow);font-weight:700}
 .res button[data-on="1"][data-v="fail"]{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:700}
 .res button[data-on="1"][data-v="na"]{background:#ECECEC;border-color:#D5D5D5;color:var(--ink-2);font-weight:700}
-.item-del{
-  border:none;background:transparent;color:#CFCFCF;cursor:pointer;font-size:17px;line-height:1;
-  padding:4px;border-radius:6px;
-}
+.item-del{border:none;background:transparent;color:#D8D8D8;cursor:pointer;font-size:17px;line-height:1;
+  padding:4px;border-radius:6px;margin-top:2px}
 .item:hover .item-del{color:var(--ink-3)}
 .item-del:hover{background:#FBEAE7;color:var(--red)}
-.section-foot{display:flex;gap:8px;padding:9px 12px;background:var(--bg-2);border-top:1px solid var(--line)}
-.link-btn{
-  border:none;background:transparent;color:var(--ink-2);cursor:pointer;font-size:13px;font-weight:500;
-  padding:3px 7px;border-radius:6px;
-}
+.section-foot{display:flex;gap:6px;padding:8px 12px;background:var(--bg-2);border-top:1px solid var(--line)}
+.link-btn{border:none;background:transparent;color:var(--ink-2);cursor:pointer;font-size:13px;
+  font-weight:500;padding:3px 8px;border-radius:6px}
 .link-btn:hover{background:#fff;color:var(--ink)}
 .link-btn.danger:hover{color:var(--red)}
 
-.empty{
-  text-align:center;padding:52px 20px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--ink-3);
-}
+.empty{text-align:center;padding:52px 20px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--ink-3)}
 .empty h3{margin:0 0 6px;font-size:16px;color:var(--ink);font-weight:600}
 .empty p{margin:0 0 18px;font-size:13.5px}
 .empty-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -196,87 +146,129 @@ h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
 /* ---------- Signature ---------- */
 .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
 .sign{text-align:center}
-.sign .line{border-bottom:1px dotted var(--ink-3);height:48px;margin-bottom:8px}
-.sign input{
-  border:none;outline:none;text-align:center;width:100%;font-size:13px;padding:3px;border-radius:5px;
-}
+.sign .line{border-bottom:1px dotted var(--ink-3);height:46px;margin-bottom:8px}
+.sign input{border:none;outline:none;text-align:center;width:100%;font-size:13px;padding:3px;border-radius:5px}
 .sign input:focus{background:var(--yellow-soft)}
 .sign .role{font-size:12px;color:var(--ink-3);margin-top:2px}
 .sign .date-line{font-size:12px;color:var(--ink-3);margin-top:6px}
+.foot-note{margin-top:26px;font-size:11px;color:var(--ink-3);text-align:center}
 
-/* ---------- Modal ---------- */
+/* ---------- Modal / toast ---------- */
 .modal{position:fixed;inset:0;background:rgba(20,20,20,.42);display:none;place-items:center;z-index:100;padding:20px}
 .modal.on{display:grid}
 .modal-box{background:#fff;border-radius:14px;max-width:520px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .modal-box h3{margin:0 0 4px;font-size:18px}
 .modal-box p{margin:0 0 18px;font-size:13.5px;color:var(--ink-2)}
-.tpl{
-  border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:.15s;
-}
+.tpl{border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:.15s}
 .tpl:hover{border-color:var(--yellow);background:var(--yellow-soft)}
 .tpl b{display:block;font-size:14.5px}
 .tpl span{font-size:12.5px;color:var(--ink-3)}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-.toast{
-  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(90px);
-  background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:13.5px;
-  z-index:200;transition:transform .25s;pointer-events:none;
-}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);
+  color:#fff;padding:10px 18px;border-radius:99px;font-size:13.5px;z-index:200;transition:transform .25s;pointer-events:none}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
-/* ---------- Responsive ---------- */
-@media (max-width:860px){
-  .page{padding:22px 18px 32px;margin:12px;border-radius:12px}
+/* ---------- Responsive (screen only) ---------- */
+@media screen and (max-width:880px){
+  .page{padding:22px 16px 30px;margin:12px;border-radius:12px}
   .info-grid{grid-template-columns:1fr;gap:0}
   .summary{grid-template-columns:repeat(2,1fr)}
   .row-head{display:none}
-  .item{grid-template-columns:30px 1fr 26px;gap:8px;row-gap:6px}
+  .item{grid-template-columns:34px 1fr 26px;gap:8px;row-gap:6px}
   .item-no{grid-row:1}
   .item-main{grid-column:2}
   .res,.note-cell{grid-column:2/4}
   .item-del{grid-column:3;grid-row:1}
-  .signs{grid-template-columns:1fr;gap:18px}
+  .signs{grid-template-columns:1fr;gap:16px}
   .doc-head{flex-wrap:wrap;gap:14px}
   .doc-meta{text-align:left}
   .doc-meta input{text-align:left}
+  .toolbar-inner{padding:8px 12px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .toolbar-inner::-webkit-scrollbar{display:none}
+  .brand small,.saved-tag{display:none}
+  .brand{margin-right:6px;font-size:14px}
+  .btn{padding:6px 10px;font-size:12.5px}
 }
+
+/* ---------- Paper sheets (ใช้ทั้งตอนวัดขนาดและตอนพิมพ์) ---------- */
+#printRoot{position:absolute;left:-9999px;top:0;visibility:hidden;width:210mm}
+.sheet{width:210mm;height:296mm;background:#fff;padding:11mm 10mm 7mm;display:flex;flex-direction:column;overflow:hidden}
+.sheet-body{flex:1;min-height:0;overflow:hidden}
+.sheet-foot{flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:8mm;
+  font-size:7.5pt;color:#909090;border-top:1px solid #E6E6E6;padding-top:2mm;margin-top:3mm}
+.sheet-foot span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-foot span:last-child{flex:none;font-variant-numeric:tabular-nums}
+
+.sheet .p-run{display:flex;justify-content:space-between;gap:8mm;font-size:7.5pt;color:#8C8C8C;
+  border-bottom:1px solid #E6E6E6;padding-bottom:1.8mm;margin-bottom:4mm}
+.sheet .p-run span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
+.sheet .p-run span:first-child{font-weight:600;color:#5A5A5A}
+.sheet .p-head{display:flex;gap:5mm;align-items:flex-start;border-bottom:1.4pt solid #161616;padding-bottom:3mm;margin-bottom:4.5mm}
+.sheet .p-logo{width:16mm;height:16mm;border-radius:2.5mm;background:#FFC700;display:grid;place-items:center;flex:none;overflow:hidden}
+.sheet .p-logo img{width:100%;height:100%;object-fit:contain;background:#fff}
+.sheet .p-logo svg{width:9mm;height:9mm}
+.sheet .p-title{font-size:15pt;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.sheet .p-sub{font-size:9pt;color:#5A5A5A;margin-top:1mm}
+.sheet .p-meta{margin-left:auto;text-align:right;font-size:8pt;color:#777;line-height:1.75;flex:none;white-space:nowrap}
+.sheet .p-meta b{font-weight:600;color:#161616}
+.sheet .p-label{font-size:8pt;font-weight:700;letter-spacing:.08em;color:#8C8C8C;display:flex;align-items:center;gap:3mm;margin:0 0 2.5mm}
+.sheet .p-label::after{content:"";flex:1;height:1px;background:#E6E6E6}
+.sheet .p-info{display:grid;grid-template-columns:1fr 1fr;gap:0 7mm;margin-bottom:4.5mm}
+.sheet .p-f{display:flex;gap:2mm;border-bottom:1px solid #EDEDED;padding:1.3mm 0;font-size:9pt;align-items:baseline}
+.sheet .p-f.wide{grid-column:1/-1}
+.sheet .p-f label{color:#777;flex:none;width:25mm;white-space:nowrap}
+.sheet .p-f span{font-weight:600;flex:1;min-width:0;word-break:break-word;min-height:1.3em}
+.sheet .p-sum{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#E6E6E6;border:1px solid #E6E6E6;
+  border-radius:2mm;overflow:hidden;margin-bottom:4.5mm}
+.sheet .p-st{background:#fff;padding:2mm 2.5mm}
+.sheet .p-st b{display:block;font-size:12.5pt;font-weight:700;line-height:1.25}
+.sheet .p-st i{font-style:normal;font-size:7.5pt;color:#8C8C8C}
+.sheet .p-st.tot{background:#FFF6D6}
+.sheet .p-st.bad b{color:#C0392B}
+.sheet .p-sec{border:1px solid #C9C9C9;border-radius:2mm;overflow:hidden;margin-bottom:3mm}
+.sheet .p-sec-h{display:flex;gap:2.5mm;align-items:flex-start;background:#FFF3CC;border-bottom:1px solid #E0C46A;padding:1.8mm 2.5mm}
+.sheet .p-no{width:5.5mm;height:5.5mm;border-radius:1.5mm;background:#161616;color:#fff;display:grid;
+  place-items:center;font-size:8pt;font-weight:700;flex:none;margin-top:.3mm}
+.sheet .p-sec-t{font-weight:700;font-size:10.5pt;flex:1;line-height:1.35;word-break:break-word}
+.sheet .p-sec-c{font-size:7.5pt;color:#5A5A5A;flex:none;padding-top:1.2mm;white-space:nowrap}
+.sheet .p-rh,.sheet .p-it{display:grid;grid-template-columns:11mm 1fr 33mm 44mm;gap:2.5mm;padding:1.6mm 2.5mm;align-items:start}
+.sheet .p-rh{background:#F4F4F4;border-bottom:1px solid #DDD;font-size:7pt;font-weight:700;letter-spacing:.04em;color:#777}
+.sheet .p-it{border-bottom:1px solid #EFEFEF;font-size:9pt}
+.sheet .p-it:last-child{border-bottom:none}
+.sheet .p-n{color:#999;font-size:8pt;padding-top:.3mm}
+.sheet .p-t{font-weight:600;line-height:1.4;word-break:break-word}
+.sheet .p-r{font-size:7.5pt;color:#777;margin-top:.4mm;word-break:break-word;line-height:1.35}
+.sheet .p-note{font-size:8pt;line-height:1.4;word-break:break-word}
+.sheet .p-res{display:flex;gap:1mm}
+.sheet .p-res span{flex:1;text-align:center;border:.7pt solid #9A9A9A;border-radius:1mm;font-size:7.5pt;padding:.7mm 0;line-height:1.3}
+.sheet .p-res span.on-pass{background:#FFC700;border-color:#161616;font-weight:700}
+.sheet .p-res span.on-fail{background:#161616;color:#fff;border-color:#161616;font-weight:700}
+.sheet .p-res span.on-na{background:#D9D9D9;border-color:#161616;font-weight:700}
+.sheet .p-signs{display:grid;grid-template-columns:repeat(3,1fr);gap:8mm;margin-top:9mm;padding-top:5mm;border-top:1px solid #DDD}
+.sheet .p-signs.tight{margin-top:4mm;padding-top:3.5mm}
+.sheet .p-signs.tight .ln{height:10mm}
+.sheet .p-sign{text-align:center;font-size:8.5pt}
+.sheet .p-sign .ln{border-bottom:1px dotted #9A9A9A;height:12mm;margin-bottom:2mm}
+.sheet .p-sign .nm{min-height:4.5mm;font-weight:500}
+.sheet .p-sign .rl{color:#888;font-size:8pt;margin-top:.5mm}
+.sheet .p-sign .dt{color:#999;font-size:8pt;margin-top:1.5mm}
+.sheet .p-foot-note{margin-top:6mm;font-size:7.5pt;color:#A0A0A0;text-align:center}
 
 /* ---------- Print / PDF ---------- */
 @media print{
-  @page{size:A4 portrait;margin:12mm 10mm}
-  html,body{background:#fff !important;font-size:10.5pt}
-  .toolbar,.modal,.toast,.no-print,.item-del,.section-foot,.empty-actions{display:none !important}
-  .page{max-width:none;margin:0;border:none;border-radius:0;padding:0}
-  .doc-title,.doc-subtitle,.field input,.item-text,.item-ref,.item-note,.section-title,.sign input,.doc-meta input{
-    background:transparent !important;border-color:transparent !important;
-  }
-  .info-grid{gap:0 18px;margin-bottom:12px}
-  .field{padding:4px 0}
-  .summary{margin-bottom:12px;break-inside:avoid}
-  .stat b{font-size:15pt}
-  .progress{display:none}
-  .section{break-inside:auto;border-color:#BBB;margin-bottom:9px}
-  .section-head{background:#FFF3CC !important;border-color:#E6C766;padding:6px 9px}
-  .section-no{background:#161616 !important;color:#fff !important}
-  .row-head{display:grid;background:#F5F5F5 !important;padding:4px 9px;font-size:8pt;border-color:#CCC}
-  .item{break-inside:avoid;padding:5px 9px;border-color:#EEE;grid-template-columns:30px 1fr 150px 190px}
-  .item:hover{background:transparent}
-  .item-del{display:none}
-  .res button{
-    border:1px solid #999 !important;font-size:9pt;padding:2px 0;color:#161616 !important;background:#fff !important;
-  }
-  .res button[data-on="1"][data-v="pass"]{background:#FFC700 !important;border-color:#161616 !important;font-weight:700}
-  .res button[data-on="1"][data-v="fail"]{background:#161616 !important;color:#fff !important;border-color:#161616 !important}
-  .res button[data-on="1"][data-v="na"]{background:#D9D9D9 !important;border-color:#161616 !important}
-  .signs{margin-top:26px;break-inside:avoid}
-  .empty{display:none}
+  @page{size:A4 portrait;margin:0}
+  html,body{background:#fff !important}
+  .toolbar,.page,.modal,.toast,.no-print{display:none !important}
+  #printRoot{position:static !important;visibility:visible !important;left:auto !important;width:auto !important}
+  .sheet{break-after:page;page-break-after:always;box-shadow:none}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
 }
 </style>
 </head>
 <body>
 
-<div class="toolbar">
+<div class="toolbar no-print">
   <div class="toolbar-inner">
     <div class="brand">
       <span class="brand-mark"><svg viewBox="0 0 100 100"><path d="M25 52l18 18 32-36" stroke="#161616" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -296,18 +288,18 @@ h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
 <div class="page" id="page">
 
   <div class="doc-head">
-    <label class="logo-box" id="logoBox" title="คลิกเพื่อใส่โลโก้หน่วยงาน">
+    <div class="logo-box" id="logoBox" title="คลิกเพื่อใส่โลโก้หน่วยงาน">
       <svg viewBox="0 0 100 100"><path d="M25 52l18 18 32-36" stroke="#161616" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <input type="file" id="logoInput" accept="image/*" hidden>
-    </label>
+    </div>
+    <input type="file" id="logoInput" accept="image/*" hidden>
     <div class="doc-title-wrap">
-      <input class="doc-title" id="fTitle" placeholder="แบบฟอร์มตรวจสอบงานก่อสร้าง">
-      <input class="doc-subtitle" id="fSubtitle" placeholder="หน่วยงาน / ฝ่าย / แผนก">
+      <div class="ce doc-title" id="fTitle" contenteditable="true" data-k="title" data-single="1" data-ph="แบบฟอร์มตรวจสอบงานก่อสร้าง"></div>
+      <div class="ce doc-subtitle" id="fSubtitle" contenteditable="true" data-k="subtitle" data-single="1" data-ph="หน่วยงาน / ฝ่าย / แผนก"></div>
     </div>
     <div class="doc-meta">
       เลขที่เอกสาร <input id="fDocNo" placeholder="CHK-000/2569"><br>
       แก้ไขครั้งที่ <input id="fRev" placeholder="00"><br>
-      หน้า <span id="pageNo">1</span> / 1
+      วันที่พิมพ์ <input id="fPrintDate" placeholder="วว/ดด/ปปปป">
     </div>
   </div>
 
@@ -356,6 +348,8 @@ h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
       <div class="date-line">วันที่ ......../......../........</div>
     </div>
   </div>
+
+  <div class="foot-note">เอกสารนี้จัดทำจากระบบ Checklist — ผลการตรวจสอบมีผลเฉพาะรายการและวันที่ที่ระบุไว้ข้างต้น</div>
 </div>
 
 <div class="modal" id="tplModal">
@@ -363,9 +357,7 @@ h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
     <h3>เลือกเทมเพลตรายการตรวจสอบ</h3>
     <p>เลือกแล้วแก้ไขข้อความ เพิ่ม หรือลบรายการได้ทั้งหมด</p>
     <div id="tplList"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" data-close>ปิด</button>
-    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close>ปิด</button></div>
   </div>
 </div>
 
@@ -380,64 +372,66 @@ h2.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
   </div>
 </div>
 
+<div id="printRoot" aria-hidden="true"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 "use strict";
 
-/* ============ Config ============ */
+/* ============ ข้อมูลตั้งต้น ============ */
 var INFO_FIELDS = [
-  {k:"project",  l:"ชื่อโครงการ", wide:true, ph:"เช่น งานก่อสร้างอาคารสำนักงาน ..."},
-  {k:"contract", l:"เลขที่สัญญา", ph:"เลขที่สัญญา / เลขที่ใบสั่งจ้าง"},
-  {k:"date",     l:"วันที่ตรวจสอบ", ph:"วว/ดด/ปปปป"},
+  {k:"project",   l:"ชื่อโครงการ", wide:true, ph:"เช่น งานก่อสร้างอาคารสำนักงาน ..."},
+  {k:"contract",  l:"เลขที่สัญญา", ph:"เลขที่สัญญา / ใบสั่งจ้าง"},
+  {k:"date",      l:"วันที่ตรวจสอบ", ph:"วว/ดด/ปปปป"},
   {k:"contractor",l:"ผู้รับจ้าง", ph:"ชื่อบริษัท / ห้างหุ้นส่วน"},
-  {k:"employer", l:"ผู้ว่าจ้าง", ph:"หน่วยงานเจ้าของโครงการ"},
-  {k:"location", l:"สถานที่ก่อสร้าง", ph:"ที่ตั้งโครงการ"},
-  {k:"phase",    l:"งวดงาน / ส่วนงาน", ph:"เช่น งวดที่ 3 / ชั้น 2 โซน A"},
-  {k:"inspector",l:"ผู้ตรวจสอบ", ph:"ชื่อ-สกุล / ตำแหน่ง"},
-  {k:"weather",  l:"สภาพอากาศ", ph:"แจ่มใส / มีฝน"},
-  {k:"period",   l:"ช่วงเวลาตรวจ", ph:"เช่น 09:00 - 11:30 น."}
+  {k:"employer",  l:"ผู้ว่าจ้าง", ph:"หน่วยงานเจ้าของโครงการ"},
+  {k:"location",  l:"สถานที่ก่อสร้าง", ph:"ที่ตั้งโครงการ"},
+  {k:"phase",     l:"งวดงาน / ส่วนงาน", ph:"เช่น งวดที่ 3 / ชั้น 2 โซน A"},
+  {k:"inspector", l:"ผู้ตรวจสอบ", ph:"ชื่อ-สกุล / ตำแหน่ง"},
+  {k:"weather",   l:"สภาพอากาศ", ph:"แจ่มใส / มีฝน"},
+  {k:"period",    l:"ช่วงเวลาตรวจ", ph:"เช่น 09:00 - 11:30 น."}
 ];
 
 var TEMPLATES = {
-  blank:{name:"เริ่มจากฟอร์มเปล่า", desc:"หมวดเดียว รายการว่าง 5 บรรทัด พิมพ์เองทั้งหมด",
+  blank:{name:"เริ่มจากฟอร์มเปล่า", desc:"1 หมวด · รายการว่าง พิมพ์เองทั้งหมด",
     sections:[{title:"หมวดที่ 1", items:[{},{},{},{},{}]}]},
 
-  building:{name:"งานโยธา / ก่อสร้างอาคาร", desc:"7 หมวด · งานเตรียมการ ฐานราก คอนกรีต ผนัง หลังคา สถาปัตยกรรม",
+  building:{name:"งานโยธา / ก่อสร้างอาคาร", desc:"งานเตรียมการ ฐานราก เสาเข็ม คอนกรีต ผนัง หลังคา เก็บงาน",
     sections:[
       {title:"งานเตรียมการและความปลอดภัย", items:[
         {t:"แบบก่อสร้างที่ใช้หน้างานเป็นฉบับล่าสุดที่อนุมัติแล้ว", r:"Approved for Construction Drawing"},
-        {t:"ผู้ควบคุมงานของผู้รับจ้างประจำหน้างานตามสัญญา", r:"ตามเงื่อนไขสัญญา"},
+        {t:"ผู้ควบคุมงานของผู้รับจ้างประจำหน้างานตามเงื่อนไขสัญญา", r:"เงื่อนไขสัญญา"},
         {t:"ติดตั้งรั้ว ป้ายโครงการ และป้ายเตือนความปลอดภัยครบถ้วน", r:""},
         {t:"คนงานสวมใส่อุปกรณ์ป้องกันส่วนบุคคล (PPE) ครบถ้วน", r:"หมวก รองเท้า เข็มขัดนิรภัย"},
         {t:"จัดเก็บวัสดุ กองวัสดุ และเส้นทางสัญจรเป็นระเบียบ ปลอดภัย", r:""},
         {t:"มีผังบริเวณ ตำแหน่งอ้างอิง และหมุดระดับ (BM) ที่ตรวจสอบได้", r:""}
       ]},
       {title:"งานดินและฐานราก", items:[
-        {t:"ระดับก้นหลุมและขนาดหลุมขุดตรงตามแบบ", r:"ค่าคลาดเคลื่อนตามที่กำหนดในแบบ"},
-        {t:"สภาพดินฐานรากแน่น ไม่มีน้ำขัง ไม่มีดินอ่อน/เศษวัสดุ", r:""},
+        {t:"ระดับก้นหลุมและขนาดหลุมขุดตรงตามแบบ", r:"ค่าคลาดเคลื่อนตามที่ระบุในแบบ"},
+        {t:"สภาพดินฐานรากแน่น ไม่มีน้ำขัง ไม่มีดินอ่อนหรือเศษวัสดุ", r:""},
         {t:"มีการป้องกันดินพัง / ค้ำยันผนังบ่อขุดตามความลึก", r:""},
-        {t:"ทรายรองพื้น / คอนกรีตหยาบหนาตามแบบ และปรับระดับเรียบ", r:"คอนกรีตหยาบหนาตามแบบ"},
-        {t:"ตำแหน่งศูนย์กลางฐานรากตรงกับผังเสาเข็ม (As-built)", r:""}
+        {t:"ทรายรองพื้นและคอนกรีตหยาบหนาตามแบบ ปรับระดับเรียบ", r:""},
+        {t:"ตำแหน่งศูนย์กลางฐานรากตรงกับผังเสาเข็มที่ตอกจริง", r:"As-built เสาเข็ม"}
       ]},
       {title:"งานเสาเข็ม", items:[
         {t:"ชนิด ขนาด และความยาวเสาเข็มตรงตามแบบและใบส่งของ", r:"ใบรับรองจากผู้ผลิต"},
-        {t:"ตำแหน่งและระยะเยื้องศูนย์อยู่ในเกณฑ์ที่ยอมรับได้", r:"ตามเกณฑ์ที่ระบุในแบบ/ข้อกำหนด"},
-        {t:"บันทึก Blow count / ค่าการทรุดตัวสุดท้ายครบทุกต้น", r:"Pile driving record"},
+        {t:"ตำแหน่งและระยะเยื้องศูนย์อยู่ในเกณฑ์ที่ยอมรับได้", r:"เกณฑ์ตามที่ระบุในแบบ/ข้อกำหนด"},
+        {t:"บันทึก Blow count และค่าการทรุดตัวสุดท้ายครบทุกต้น", r:"Pile driving record"},
         {t:"สภาพหัวเสาเข็มหลังสกัดไม่แตกร้าวเสียหาย เหล็กยื่นตามแบบ", r:""},
         {t:"ผลทดสอบเสาเข็ม (Seismic / Dynamic Load Test) ผ่านเกณฑ์", r:"ตามข้อกำหนดโครงการ"}
       ]},
       {title:"งานเหล็กเสริมและแบบหล่อ", items:[
-        {t:"ขนาด ชั้นคุณภาพ และจำนวนเหล็กเสริมตรงตามแบบ", r:"มอก. 24 / มอก. 20"},
-        {t:"ระยะทาบ ระยะงอ และตำแหน่งต่อเหล็กถูกต้อง", r:"ตามรายละเอียดในแบบ"},
+        {t:"ขนาด ชั้นคุณภาพ และจำนวนเหล็กเสริมตรงตามแบบ", r:"ใบรับรอง/ผลทดสอบเหล็ก"},
+        {t:"ระยะทาบ ระยะงอ และตำแหน่งต่อเหล็กถูกต้อง", r:"รายละเอียดในแบบ"},
         {t:"ระยะหุ้มคอนกรีต (Covering) ได้ตามแบบ มีลูกปูนรองครบ", r:""},
         {t:"ผิวเหล็กสะอาด ไม่มีสนิมขุม น้ำมัน หรือสิ่งสกปรก", r:""},
-        {t:"แบบหล่อได้ระดับ ได้ดิ่ง แข็งแรง ไม่รั่วซึม และค้ำยันเพียงพอ", r:""},
+        {t:"แบบหล่อได้ระดับ ได้ดิ่ง แข็งแรง ไม่รั่วซึม ค้ำยันเพียงพอ", r:""},
         {t:"ทำความสะอาดภายในแบบหล่อก่อนเทคอนกรีต", r:""}
       ]},
       {title:"งานคอนกรีต", items:[
         {t:"กำลังอัดคอนกรีตที่ใช้ตรงตามที่ระบุในแบบ", r:"ตรวจจากใบส่งคอนกรีต"},
-        {t:"ค่ายุบตัว (Slump) อยู่ในเกณฑ์ที่กำหนด", r:"ทดสอบทุกรถ/ตามข้อกำหนด"},
+        {t:"ค่ายุบตัว (Slump) อยู่ในเกณฑ์ที่กำหนด", r:"ทดสอบตามข้อกำหนด"},
         {t:"เก็บตัวอย่างลูกปูนทดสอบตามจำนวนและวิธีที่กำหนด", r:"มอก. 409 / ASTM C31"},
         {t:"ระยะเวลาขนส่งและเทคอนกรีตอยู่ในเกณฑ์ ไม่เติมน้ำหน้างาน", r:""},
         {t:"การเทและจี้เขย่าทั่วถึง ไม่เกิดโพรง (Honeycomb)", r:""},
@@ -461,33 +455,33 @@ var TEMPLATES = {
       ]}
     ]},
 
-  road:{name:"งานถนน / ระบบระบายน้ำ", desc:"7 หมวด · งานดิน พื้นทาง ผิวจราจร ท่อระบายน้ำ ทางเท้า จราจร",
+  road:{name:"งานถนน / ระบบระบายน้ำ", desc:"งานดิน พื้นทาง ผิวจราจร ท่อระบายน้ำ ทางเท้า เครื่องหมายจราจร",
     sections:[
       {title:"งานเตรียมพื้นที่และรื้อถอน", items:[
-        {t:"รื้อถอนผิวทางเดิม/สิ่งกีดขวางและขนย้ายออกนอกพื้นที่", r:""},
+        {t:"รื้อถอนผิวทางเดิม สิ่งกีดขวาง และขนย้ายออกนอกพื้นที่", r:""},
         {t:"ตรวจสอบและป้องกันระบบสาธารณูปโภคใต้ดินก่อนขุด", r:"ประสานหน่วยงานเจ้าของระบบ"},
         {t:"ติดตั้งป้ายเตือน ไฟสัญญาณ และแนวกั้นเขตงานตามมาตรฐาน", r:"มาตรฐานงานจราจรระหว่างก่อสร้าง"},
         {t:"วางแนวศูนย์กลางถนนและหมุดระดับตรงตามแบบ", r:""}
       ]},
       {title:"งานดินตัด-ดินถมและบดอัด", items:[
-        {t:"วัสดุดินถมมีคุณสมบัติตรงตามข้อกำหนด (ผลทดสอบแนบ)", r:"ผลทดสอบห้อง Lab"},
-        {t:"ความหนาชั้นละก่อนบดอัดไม่เกินที่กำหนด", r:"ตามข้อกำหนดโครงการ"},
+        {t:"วัสดุดินถมมีคุณสมบัติตรงตามข้อกำหนด (แนบผลทดสอบ)", r:"ผลทดสอบห้องปฏิบัติการ"},
+        {t:"ความหนาชั้นละก่อนบดอัดไม่เกินที่กำหนด", r:"ข้อกำหนดโครงการ"},
         {t:"ความชื้นขณะบดอัดอยู่ในช่วง Optimum Moisture Content", r:""},
         {t:"ผลทดสอบความแน่นในสนามผ่านเกณฑ์ที่กำหนด", r:"Field Density Test"},
         {t:"ระดับหลังงานดินถมและความลาดเอียงตรงตามแบบ", r:""}
       ]},
       {title:"งานรองพื้นทางและพื้นทาง", items:[
-        {t:"วัสดุรองพื้นทาง (Subbase) มีค่า CBR และการคละขนาดผ่านเกณฑ์", r:"ผลทดสอบวัสดุ"},
+        {t:"วัสดุรองพื้นทาง (Subbase) ค่า CBR และการคละขนาดผ่านเกณฑ์", r:"ผลทดสอบวัสดุ"},
         {t:"วัสดุพื้นทาง (Base) หินคลุก/ลูกรัง ตรงตามข้อกำหนด", r:"ผลทดสอบวัสดุ"},
         {t:"ความหนาหลังบดอัดของแต่ละชั้นตรงตามแบบ", r:"เจาะตรวจสอบ/วัดหน้างาน"},
         {t:"ความแน่นหลังบดอัดผ่านเกณฑ์ที่กำหนด", r:"Field Density Test"},
         {t:"ผิวหน้าเรียบ ได้ระดับ ไม่มีวัสดุแยกตัว (Segregation)", r:""}
       ]},
       {title:"งานผิวจราจร", items:[
-        {t:"ทำความสะอาดผิวและลาด Prime Coat / Tack Coat ในอัตราที่กำหนด", r:"ตามข้อกำหนดโครงการ"},
+        {t:"ทำความสะอาดผิวและลาด Prime Coat / Tack Coat ตามอัตราที่กำหนด", r:"ข้อกำหนดโครงการ"},
         {t:"อุณหภูมิแอสฟัลต์ขณะปูและขณะบดอัดอยู่ในเกณฑ์", r:"ตรวจวัดหน้างาน"},
         {t:"ความหนาผิวจราจรหลังบดอัดตรงตามแบบ", r:"Core test"},
-        {t:"รอยต่อตามยาว/ตามขวางเรียบสนิท ไม่แยกตัว", r:""},
+        {t:"รอยต่อตามยาวและตามขวางเรียบสนิท ไม่แยกตัว", r:""},
         {t:"ความเรียบผิวทางและความลาดเอียงระบายน้ำผ่านเกณฑ์", r:"ทดสอบด้วยไม้บรรทัด 3 ม."},
         {t:"กรณีผิวคอนกรีต: รอยต่อ เหล็กเดือย และการบ่มถูกต้องตามแบบ", r:""}
       ]},
@@ -497,13 +491,13 @@ var TEMPLATES = {
         {t:"ทรายรองก้นร่องและการกลบบดอัดข้างท่อถูกวิธี", r:""},
         {t:"รอยต่อท่อยาแนวเรียบร้อย ไม่รั่วซึม", r:"ทดสอบขังน้ำ"},
         {t:"บ่อพัก ฝาบ่อ และตะแกรงรับน้ำได้ระดับกับผิวจราจร", r:""},
-        {t:"ทำความสะอาดภายในท่อและบ่อ น้ำไหลได้สะดวกตลอดแนว", r:""}
+        {t:"ทำความสะอาดภายในท่อและบ่อ น้ำไหลสะดวกตลอดแนว", r:""}
       ]},
       {title:"งานคันหิน ทางเท้า และงานประกอบ", items:[
         {t:"คันหินได้แนว ได้ระดับ รอยต่อสม่ำเสมอ ไม่บิ่นแตก", r:""},
         {t:"ความหนาและกำลังอัดคอนกรีตทางเท้าตรงตามแบบ", r:""},
-        {t:"ทางลาดคนพิการ (Ramp) และ Braille block ตามแบบมาตรฐาน", r:"กฎกระทรวงสิ่งอำนวยความสะดวก"},
-        {t:"งานปลูกหญ้า/ปรับภูมิทัศน์ไหล่ทางเรียบร้อย", r:""}
+        {t:"ทางลาดคนพิการ (Ramp) และ Braille block ตามแบบมาตรฐาน", r:"กฎกระทรวงสิ่งอำนวยความสะดวกฯ"},
+        {t:"งานปลูกหญ้าและปรับภูมิทัศน์ไหล่ทางเรียบร้อย", r:""}
       ]},
       {title:"งานเครื่องหมายจราจรและส่งมอบ", items:[
         {t:"ตีเส้นจราจรถูกตำแหน่ง ความกว้าง และชนิดสีตามแบบ", r:"มาตรฐานงานเครื่องหมายจราจร"},
@@ -517,40 +511,35 @@ var TEMPLATES = {
 
 /* ============ State ============ */
 var KEY = "civil_checklist_v1";
-var state = null;
-var uid = 0;
+var state = null, uid = 0;
 function nid(){ uid++; return "i" + Date.now().toString(36) + uid.toString(36); }
+function el(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function pad(n){ return n < 10 ? "0" + n : "" + n; }
+function todayTH(){ var d = new Date(); return pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+(d.getFullYear()+543); }
 
 function blankState(){
-  return {
-    title:"", subtitle:"", docNo:"", rev:"", logo:"",
-    info:{}, sections:[], signs:{sg1:"",sg2:"",sg3:""}
-  };
-}
-
-function load(){
-  try{
-    var raw = localStorage.getItem(KEY);
-    if(raw){ var o = JSON.parse(raw); if(o && typeof o === "object"){ return normalize(o); } }
-  }catch(e){}
-  return blankState();
+  return {title:"", subtitle:"", docNo:"", rev:"", printDate:"", logo:"", info:{}, sections:[], signs:{sg1:"",sg2:"",sg3:""}};
 }
 function normalize(o){
   var s = blankState();
-  ["title","subtitle","docNo","rev","logo"].forEach(function(k){ if(typeof o[k]==="string") s[k]=o[k]; });
-  if(o.info && typeof o.info==="object") s.info = o.info;
-  if(o.signs && typeof o.signs==="object") s.signs = {sg1:o.signs.sg1||"",sg2:o.signs.sg2||"",sg3:o.signs.sg3||""};
+  ["title","subtitle","docNo","rev","printDate","logo"].forEach(function(k){ if(typeof o[k] === "string") s[k] = o[k]; });
+  if(o.info && typeof o.info === "object") s.info = o.info;
+  if(o.signs && typeof o.signs === "object"){
+    s.signs = {sg1:o.signs.sg1||"", sg2:o.signs.sg2||"", sg3:o.signs.sg3||""};
+  }
   if(Array.isArray(o.sections)){
     s.sections = o.sections.map(function(sec){
       return {
         id: sec.id || nid(),
-        title: typeof sec.title==="string" ? sec.title : "",
-        items: (Array.isArray(sec.items)?sec.items:[]).map(function(it){
+        title: typeof sec.title === "string" ? sec.title : "",
+        items: (Array.isArray(sec.items) ? sec.items : []).map(function(it){
           return {
             id: it.id || nid(),
             text: it.text || "",
             ref: it.ref || "",
-            result: (it.result==="pass"||it.result==="fail"||it.result==="na") ? it.result : "",
+            result: (it.result === "pass" || it.result === "fail" || it.result === "na") ? it.result : "",
             note: it.note || ""
           };
         })
@@ -558,6 +547,13 @@ function normalize(o){
     });
   }
   return s;
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var o = JSON.parse(raw); if(o && typeof o === "object") return normalize(o); }
+  }catch(e){}
+  return blankState();
 }
 var saveTimer = null;
 function save(){
@@ -567,51 +563,42 @@ function save(){
       localStorage.setItem(KEY, JSON.stringify(state));
       var t = new Date();
       el("savedTag").textContent = "บันทึกอัตโนมัติ " + pad(t.getHours()) + ":" + pad(t.getMinutes());
-    }catch(e){ el("savedTag").textContent = "บันทึกอัตโนมัติไม่สำเร็จ"; }
+    }catch(e){ el("savedTag").textContent = "บันทึกลงเครื่องไม่สำเร็จ"; }
   }, 350);
 }
-function pad(n){ return n<10 ? "0"+n : ""+n; }
-
-/* ============ Helpers ============ */
-function el(id){ return document.getElementById(id); }
-function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
-  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
-function autoGrow(t){ t.style.height="auto"; t.style.height=(t.scrollHeight)+"px"; }
 function toast(msg){
   var t = el("toast"); t.textContent = msg; t.classList.add("on");
-  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove("on"); }, 2000);
-}
-function todayTH(){
-  var d = new Date();
-  return pad(d.getDate()) + "/" + pad(d.getMonth()+1) + "/" + (d.getFullYear()+543);
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove("on"); }, 2200);
 }
 
-/* ============ Render: header + info ============ */
+/* ============ Render ============ */
 function renderStatic(){
-  el("fTitle").value = state.title;
-  el("fSubtitle").value = state.subtitle;
+  el("fTitle").textContent = state.title;
+  el("fSubtitle").textContent = state.subtitle;
   el("fDocNo").value = state.docNo;
   el("fRev").value = state.rev;
+  el("fPrintDate").value = state.printDate;
   el("sg1").value = state.signs.sg1;
   el("sg2").value = state.signs.sg2;
   el("sg3").value = state.signs.sg3;
-  if(state.logo){
-    el("logoBox").innerHTML = '<img src="'+esc(state.logo)+'" alt="logo"><input type="file" id="logoInput" accept="image/*" hidden>';
-    bindLogo();
-  }
+  renderLogo();
+}
+function renderLogo(){
+  var box = el("logoBox");
+  box.innerHTML = state.logo
+    ? '<img src="' + esc(state.logo) + '" alt="โลโก้หน่วยงาน">'
+    : '<svg viewBox="0 0 100 100"><path d="M25 52l18 18 32-36" stroke="#161616" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 function renderInfo(){
   var h = "";
   INFO_FIELDS.forEach(function(f){
-    h += '<div class="field'+(f.wide?" wide":"")+'">'+
-           '<label for="in_'+f.k+'">'+esc(f.l)+'</label>'+
-           '<input id="in_'+f.k+'" data-info="'+f.k+'" placeholder="'+esc(f.ph||"")+'" value="'+esc(state.info[f.k]||"")+'">'+
+    h += '<div class="field' + (f.wide ? " wide" : "") + '">' +
+           '<label>' + esc(f.l) + '</label>' +
+           '<div class="ce" id="in_' + f.k + '" contenteditable="true" data-info="' + f.k + '" data-single="1" data-ph="' + esc(f.ph || "") + '">' + esc(state.info[f.k] || "") + '</div>' +
          '</div>';
   });
   el("infoGrid").innerHTML = h;
 }
-
-/* ============ Render: sections ============ */
 function renderSections(){
   var wrap = el("sections");
   if(!state.sections.length){
@@ -625,49 +612,46 @@ function renderSections(){
   var h = "";
   state.sections.forEach(function(sec, si){
     var done = sec.items.filter(function(i){ return i.result; }).length;
-    h += '<div class="section" data-sec="'+sec.id+'">';
+    h += '<div class="section" data-sec="' + sec.id + '">';
     h +=   '<div class="section-head">';
-    h +=     '<span class="section-no">'+(si+1)+'</span>';
-    h +=     '<input class="section-title" data-sectitle="'+sec.id+'" value="'+esc(sec.title)+'" placeholder="ชื่อหมวดงาน">';
-    h +=     '<span class="section-count">'+done+'/'+sec.items.length+' รายการ</span>';
+    h +=     '<span class="section-no">' + (si + 1) + '</span>';
+    h +=     '<div class="ce section-title" contenteditable="true" data-sectitle="' + sec.id + '" data-single="1" data-ph="ชื่อหมวดงาน">' + esc(sec.title) + '</div>';
+    h +=     '<span class="section-count">' + done + '/' + sec.items.length + ' รายการ</span>';
     h +=   '</div>';
     h +=   '<div class="row-head"><span>ลำดับ</span><span>รายการตรวจสอบ / เกณฑ์อ้างอิง</span><span>ผลการตรวจ</span><span>หมายเหตุ</span><span></span></div>';
     sec.items.forEach(function(it, ii){
-      h += '<div class="item" data-item="'+it.id+'">';
-      h +=   '<div class="item-no">'+(si+1)+'.'+(ii+1)+'</div>';
+      h += '<div class="item" data-item="' + it.id + '">';
+      h +=   '<div class="item-no">' + (si + 1) + '.' + (ii + 1) + '</div>';
       h +=   '<div class="item-main">';
-      h +=     '<textarea class="item-text" rows="1" data-f="text" placeholder="พิมพ์รายการที่ต้องตรวจสอบ...">'+esc(it.text)+'</textarea>';
-      h +=     '<textarea class="item-ref" rows="1" data-f="ref" placeholder="เกณฑ์ / มาตรฐานอ้างอิง">'+esc(it.ref)+'</textarea>';
+      h +=     '<div class="ce item-text" contenteditable="true" data-f="text" data-ph="พิมพ์รายการที่ต้องตรวจสอบ...">' + esc(it.text) + '</div>';
+      h +=     '<div class="ce item-ref" contenteditable="true" data-f="ref" data-ph="เกณฑ์ / มาตรฐานอ้างอิง">' + esc(it.ref) + '</div>';
       h +=   '</div>';
       h +=   '<div class="res">';
-      h +=     '<button data-r="pass" data-v="pass" data-on="'+(it.result==="pass"?1:0)+'">ผ่าน</button>';
-      h +=     '<button data-r="fail" data-v="fail" data-on="'+(it.result==="fail"?1:0)+'">ไม่ผ่าน</button>';
-      h +=     '<button data-r="na"   data-v="na"   data-on="'+(it.result==="na"?1:0)+'">N.A.</button>';
+      h +=     '<button type="button" data-r="pass" data-v="pass" data-on="' + (it.result === "pass" ? 1 : 0) + '">ผ่าน</button>';
+      h +=     '<button type="button" data-r="fail" data-v="fail" data-on="' + (it.result === "fail" ? 1 : 0) + '">ไม่ผ่าน</button>';
+      h +=     '<button type="button" data-r="na"   data-v="na"   data-on="' + (it.result === "na"   ? 1 : 0) + '">N.A.</button>';
       h +=   '</div>';
-      h +=   '<div class="note-cell"><textarea class="item-note" rows="1" data-f="note" placeholder="หมายเหตุ / สิ่งที่ต้องแก้ไข">'+esc(it.note)+'</textarea></div>';
-      h +=   '<button class="item-del" data-del="'+it.id+'" title="ลบรายการ">×</button>';
+      h +=   '<div class="note-cell"><div class="ce item-note" contenteditable="true" data-f="note" data-ph="หมายเหตุ / สิ่งที่ต้องแก้ไข">' + esc(it.note) + '</div></div>';
+      h +=   '<button type="button" class="item-del" data-del="' + it.id + '" title="ลบรายการ">×</button>';
       h += '</div>';
     });
     h +=   '<div class="section-foot">';
-    h +=     '<button class="link-btn" data-additem="'+sec.id+'">＋ เพิ่มรายการ</button>';
-    h +=     '<button class="link-btn" data-dup="'+sec.id+'">⧉ ทำสำเนาหมวด</button>';
-    h +=     '<button class="link-btn danger" data-delsec="'+sec.id+'">ลบหมวดนี้</button>';
+    h +=     '<button type="button" class="link-btn" data-additem="' + sec.id + '">＋ เพิ่มรายการ</button>';
+    h +=     '<button type="button" class="link-btn" data-dup="' + sec.id + '">⧉ ทำสำเนาหมวด</button>';
+    h +=     '<button type="button" class="link-btn" data-up="' + sec.id + '">↑ เลื่อนขึ้น</button>';
+    h +=     '<button type="button" class="link-btn danger" data-delsec="' + sec.id + '">ลบหมวดนี้</button>';
     h +=   '</div>';
     h += '</div>';
   });
   wrap.innerHTML = h;
-
-  var tas = wrap.querySelectorAll("textarea");
-  for(var i=0;i<tas.length;i++){ autoGrow(tas[i]); }
   renderStats();
 }
-
 function renderStats(){
-  var total=0,p=0,f=0,n=0;
+  var total = 0, p = 0, f = 0, n = 0;
   state.sections.forEach(function(s){
     s.items.forEach(function(i){
       total++;
-      if(i.result==="pass")p++; else if(i.result==="fail")f++; else if(i.result==="na")n++;
+      if(i.result === "pass") p++; else if(i.result === "fail") f++; else if(i.result === "na") n++;
     });
   });
   el("sTotal").textContent = total;
@@ -675,103 +659,142 @@ function renderStats(){
   el("sFail").textContent = f;
   el("sNa").textContent = n;
   el("sLeft").textContent = total - p - f - n;
-  el("bar").style.width = total ? Math.round((p+f+n)/total*100) + "%" : "0%";
+  el("bar").style.width = total ? Math.round((p + f + n) / total * 100) + "%" : "0%";
 }
 
-/* ============ Find helpers ============ */
-function findSec(id){ for(var i=0;i<state.sections.length;i++){ if(state.sections[i].id===id) return state.sections[i]; } return null; }
+/* ============ Lookups ============ */
+function findSec(id){
+  for(var i = 0; i < state.sections.length; i++){ if(state.sections[i].id === id) return state.sections[i]; }
+  return null;
+}
 function findItem(id){
-  for(var i=0;i<state.sections.length;i++){
-    var it = state.sections[i].items;
-    for(var j=0;j<it.length;j++){ if(it[j].id===id) return it[j]; }
+  for(var i = 0; i < state.sections.length; i++){
+    var arr = state.sections[i].items;
+    for(var j = 0; j < arr.length; j++){ if(arr[j].id === id) return arr[j]; }
   }
   return null;
 }
-function newItem(o){
-  o = o || {};
-  return {id:nid(), text:o.t||"", ref:o.r||"", result:"", note:""};
+function newItem(o){ o = o || {}; return {id:nid(), text:o.t || "", ref:o.r || "", result:"", note:""}; }
+function ceText(node){
+  if(node.innerHTML === "<br>"){ node.innerHTML = ""; }
+  return node.innerText.replace(/\n+$/,"");
 }
 
-/* ============ Events ============ */
+/* ============ Input events ============ */
 document.addEventListener("input", function(e){
   var t = e.target;
-  if(t.dataset.info !== undefined && t.dataset.info !== ""){ state.info[t.dataset.info] = t.value; save(); return; }
-  if(t.dataset.sectitle){ var s = findSec(t.dataset.sectitle); if(s){ s.title = t.value; save(); } return; }
-  if(t.dataset.f){
-    var row = t.closest(".item"); if(!row) return;
-    var it = findItem(row.dataset.item); if(!it) return;
-    it[t.dataset.f] = t.value;
-    autoGrow(t); save(); return;
+
+  if(t.isContentEditable){
+    var val = ceText(t);
+    if(t.dataset.info){ state.info[t.dataset.info] = val; save(); return; }
+    if(t.dataset.sectitle){ var s = findSec(t.dataset.sectitle); if(s){ s.title = val; save(); } return; }
+    if(t.dataset.f){
+      var row = t.closest(".item"); if(!row) return;
+      var it = findItem(row.dataset.item); if(it){ it[t.dataset.f] = val; save(); }
+      return;
+    }
+    if(t.dataset.k){ state[t.dataset.k] = val; save(); return; }
+    return;
   }
+
   switch(t.id){
-    case "fTitle": state.title=t.value; save(); break;
-    case "fSubtitle": state.subtitle=t.value; save(); break;
-    case "fDocNo": state.docNo=t.value; save(); break;
-    case "fRev": state.rev=t.value; save(); break;
-    case "sg1": case "sg2": case "sg3": state.signs[t.id]=t.value; save(); break;
+    case "fDocNo": state.docNo = t.value; save(); break;
+    case "fRev": state.rev = t.value; save(); break;
+    case "fPrintDate": state.printDate = t.value; save(); break;
+    case "sg1": case "sg2": case "sg3": state.signs[t.id] = t.value; save(); break;
   }
 });
 
+/* วางข้อความแบบ plain text เท่านั้น */
+document.addEventListener("paste", function(e){
+  var t = e.target;
+  if(!t.isContentEditable) return;
+  e.preventDefault();
+  var txt = (e.clipboardData || window.clipboardData).getData("text/plain");
+  if(t.dataset.single) txt = txt.replace(/\s*\n\s*/g, " ");
+  document.execCommand("insertText", false, txt);
+});
+
+/* Enter = ไม่ขึ้นบรรทัดใหม่ในช่องบรรทัดเดียว */
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter" && e.target.isContentEditable && e.target.dataset.single){ e.preventDefault(); e.target.blur(); }
+  if(e.key === "Escape"){
+    var ms = document.querySelectorAll(".modal.on");
+    for(var i = 0; i < ms.length; i++) ms[i].classList.remove("on");
+  }
+});
+
+/* ============ Section / item actions ============ */
 el("sections").addEventListener("click", function(e){
   var b = e.target.closest("button");
   if(!b) return;
 
   if(b.dataset.r){
-    var row = b.closest(".item"); var it = findItem(row.dataset.item); if(!it) return;
+    var row = b.closest(".item"), it = findItem(row.dataset.item);
+    if(!it) return;
     it.result = (it.result === b.dataset.r) ? "" : b.dataset.r;
     var btns = row.querySelectorAll(".res button");
-    for(var i=0;i<btns.length;i++){ btns[i].dataset.on = (btns[i].dataset.r === it.result) ? "1" : "0"; }
-    var sec = findSec(b.closest(".section").dataset.sec);
+    for(var i = 0; i < btns.length; i++){ btns[i].dataset.on = (btns[i].dataset.r === it.result) ? "1" : "0"; }
+    var secEl = b.closest(".section"), sec = findSec(secEl.dataset.sec);
     var cnt = sec.items.filter(function(x){ return x.result; }).length;
-    b.closest(".section").querySelector(".section-count").textContent = cnt + "/" + sec.items.length + " รายการ";
+    secEl.querySelector(".section-count").textContent = cnt + "/" + sec.items.length + " รายการ";
     renderStats(); save(); return;
   }
   if(b.dataset.del){
-    var sec2 = findSec(b.closest(".section").dataset.sec);
-    sec2.items = sec2.items.filter(function(x){ return x.id !== b.dataset.del; });
+    var s1 = findSec(b.closest(".section").dataset.sec);
+    s1.items = s1.items.filter(function(x){ return x.id !== b.dataset.del; });
     renderSections(); save(); return;
   }
   if(b.dataset.additem){
-    var sec3 = findSec(b.dataset.additem);
-    sec3.items.push(newItem());
+    var s2 = findSec(b.dataset.additem);
+    s2.items.push(newItem());
     renderSections(); save();
-    var rows = document.querySelectorAll('[data-sec="'+sec3.id+'"] .item-text');
-    if(rows.length) rows[rows.length-1].focus();
+    var cells = document.querySelectorAll('[data-sec="' + s2.id + '"] .item-text');
+    if(cells.length) cells[cells.length - 1].focus();
     return;
   }
   if(b.dataset.dup){
-    var sec4 = findSec(b.dataset.dup);
-    var idx = state.sections.indexOf(sec4);
-    var copy = {id:nid(), title: sec4.title + " (สำเนา)", items: sec4.items.map(function(i){
-      return {id:nid(), text:i.text, ref:i.ref, result:"", note:""}; })};
-    state.sections.splice(idx+1, 0, copy);
+    var s3 = findSec(b.dataset.dup), idx = state.sections.indexOf(s3);
+    state.sections.splice(idx + 1, 0, {
+      id:nid(), title:s3.title + " (สำเนา)",
+      items:s3.items.map(function(i){ return {id:nid(), text:i.text, ref:i.ref, result:"", note:""}; })
+    });
     renderSections(); save(); return;
   }
+  if(b.dataset.up){
+    var s4 = findSec(b.dataset.up), k = state.sections.indexOf(s4);
+    if(k > 0){
+      state.sections.splice(k, 1);
+      state.sections.splice(k - 1, 0, s4);
+      renderSections(); save();
+    }
+    return;
+  }
   if(b.dataset.delsec){
-    askConfirm("ลบหมวดนี้?", "รายการตรวจสอบทั้งหมดในหมวดนี้จะถูกลบ ไม่สามารถกู้คืนได้", function(){
-      state.sections = state.sections.filter(function(s){ return s.id !== b.dataset.delsec; });
+    var target = b.dataset.delsec;
+    askConfirm("ลบหมวดนี้?", "รายการตรวจสอบทั้งหมดในหมวดนี้จะถูกลบ และไม่สามารถกู้คืนได้", function(){
+      state.sections = state.sections.filter(function(s){ return s.id !== target; });
       renderSections(); save(); toast("ลบหมวดแล้ว");
     });
-    return;
   }
 });
 
 function addSection(){
-  state.sections.push({id:nid(), title:"หมวดที่ " + (state.sections.length+1), items:[newItem(),newItem(),newItem()]});
+  state.sections.push({id:nid(), title:"หมวดที่ " + (state.sections.length + 1), items:[newItem(), newItem(), newItem()]});
   renderSections(); save();
   var titles = document.querySelectorAll(".section-title");
-  if(titles.length) titles[titles.length-1].select();
+  if(titles.length) titles[titles.length - 1].focus();
 }
 el("btnAddSec").onclick = addSection;
 el("btnAddSec2").onclick = addSection;
 
-/* ---- Templates ---- */
+/* ============ Templates ============ */
 function openTpl(){
   var h = "";
   Object.keys(TEMPLATES).forEach(function(k){
     var t = TEMPLATES[k];
-    var n = t.sections.reduce(function(a,s){ return a + s.items.length; }, 0);
-    h += '<div class="tpl" data-tpl="'+k+'"><b>'+esc(t.name)+'</b><span>'+esc(t.desc)+' · รวม '+n+' รายการ</span></div>';
+    var n = t.sections.reduce(function(a, s){ return a + s.items.length; }, 0);
+    h += '<div class="tpl" data-tpl="' + k + '"><b>' + esc(t.name) + '</b><span>' + esc(t.desc) + ' · ' + t.sections.length + ' หมวด / ' + n + ' รายการ</span></div>';
   });
   el("tplList").innerHTML = h;
   el("tplModal").classList.add("on");
@@ -780,29 +803,24 @@ el("btnTpl").onclick = openTpl;
 el("btnTpl2").onclick = openTpl;
 
 el("tplList").addEventListener("click", function(e){
-  var c = e.target.closest("[data-tpl]"); if(!c) return;
+  var c = e.target.closest("[data-tpl]");
+  if(!c) return;
   var t = TEMPLATES[c.dataset.tpl];
   t.sections.forEach(function(s){
     state.sections.push({id:nid(), title:s.title, items:s.items.map(function(i){ return newItem(i); })});
   });
-  if(!state.title) { state.title = "แบบฟอร์มตรวจสอบ" + t.name.replace("งาน","งาน"); el("fTitle").value = state.title; }
-  if(!state.info.date){ state.info.date = todayTH(); }
+  if(!state.title && c.dataset.tpl !== "blank") state.title = "แบบฟอร์มตรวจสอบ" + t.name;
+  if(!state.info.date) state.info.date = todayTH();
+  if(!state.printDate) state.printDate = todayTH();
   el("tplModal").classList.remove("on");
-  renderInfo(); renderSections(); save();
-  toast("เพิ่มเทมเพลต " + t.name + " แล้ว");
+  renderStatic(); renderInfo(); renderSections(); save();
+  toast("เพิ่ม " + t.name + " แล้ว");
 });
 
-/* ---- Modals ---- */
+/* ============ Modals ============ */
 document.addEventListener("click", function(e){
-  if(e.target.hasAttribute && e.target.hasAttribute("data-close")){ e.target.closest(".modal").classList.remove("on"); }
-  if(e.target.classList && e.target.classList.contains("modal")){ e.target.classList.remove("on"); }
-});
-document.addEventListener("keydown", function(e){
-  if(e.key === "Escape"){
-    var ms = document.querySelectorAll(".modal.on");
-    for(var i=0;i<ms.length;i++) ms[i].classList.remove("on");
-  }
-  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "p"){ /* let browser print */ }
+  if(e.target.hasAttribute && e.target.hasAttribute("data-close")) e.target.closest(".modal").classList.remove("on");
+  if(e.target.classList && e.target.classList.contains("modal")) e.target.classList.remove("on");
 });
 var cfCb = null;
 function askConfirm(title, text, cb){
@@ -816,33 +834,31 @@ el("cfOk").onclick = function(){
   if(cfCb){ cfCb(); cfCb = null; }
 };
 
-/* ---- Clear ---- */
+/* ============ Clear / Export / Import ============ */
 el("btnClear").onclick = function(){
-  askConfirm("ล้างฟอร์มทั้งหมด?", "ข้อมูลโครงการและรายการตรวจสอบทั้งหมดจะถูกลบออกจากเครื่องนี้", function(){
+  askConfirm("ล้างฟอร์มทั้งหมด?", "ข้อมูลโครงการและรายการตรวจสอบทั้งหมดจะถูกลบออกจากเครื่องนี้ แนะนำให้กด ↓ JSON เก็บไว้ก่อน", function(){
     state = blankState();
     try{ localStorage.removeItem(KEY); }catch(e){}
-    el("logoBox").innerHTML = '<svg viewBox="0 0 100 100"><path d="M25 52l18 18 32-36" stroke="#161616" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><input type="file" id="logoInput" accept="image/*" hidden>';
-    bindLogo();
     renderStatic(); renderInfo(); renderSections();
     el("savedTag").textContent = "";
     toast("ล้างฟอร์มแล้ว");
   });
 };
-
-/* ---- Export / Import ---- */
 el("btnExport").onclick = function(){
-  var name = (state.info.project || "checklist").replace(/[\\/:*?"<>|]/g,"-").slice(0,60);
+  var name = (state.info.project || "checklist").replace(/[\\/:*?"<>|]/g, "-").slice(0, 60);
   var blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = name + ".json";
-  document.body.appendChild(a); a.click();
+  document.body.appendChild(a);
+  a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
   toast("ส่งออกไฟล์ JSON แล้ว");
 };
 el("btnImport").onclick = function(){ el("fileInput").click(); };
 el("fileInput").onchange = function(e){
-  var f = e.target.files && e.target.files[0]; if(!f) return;
+  var f = e.target.files && e.target.files[0];
+  if(!f) return;
   var r = new FileReader();
   r.onload = function(){
     try{
@@ -855,44 +871,203 @@ el("fileInput").onchange = function(e){
   e.target.value = "";
 };
 
-/* ---- Logo ---- */
-function bindLogo(){
-  var box = el("logoBox"), inp = el("logoInput");
-  if(!box || !inp) return;
-  box.onclick = function(){ inp.click(); };
-  inp.onchange = function(e){
-    var f = e.target.files && e.target.files[0]; if(!f) return;
-    if(f.size > 800*1024){ toast("ไฟล์ใหญ่เกิน 800KB"); return; }
-    var r = new FileReader();
-    r.onload = function(){
-      state.logo = r.result;
-      box.innerHTML = '<img src="'+esc(state.logo)+'" alt="logo"><input type="file" id="logoInput" accept="image/*" hidden>';
-      bindLogo(); save();
-    };
-    r.readAsDataURL(f);
-  };
+/* ============ Logo ============ */
+el("logoBox").onclick = function(){ el("logoInput").click(); };
+el("logoInput").onchange = function(e){
+  var f = e.target.files && e.target.files[0];
+  if(!f) return;
+  if(f.size > 800 * 1024){ toast("ไฟล์โลโก้ควรเล็กกว่า 800KB"); return; }
+  var r = new FileReader();
+  r.onload = function(){ state.logo = r.result; renderLogo(); save(); };
+  r.readAsDataURL(f);
+  e.target.value = "";
+};
+
+/* ============ สร้างหน้ากระดาษ A4 สำหรับพิมพ์ / PDF ============ */
+function nodeFrom(html){ var d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+function logoHTML(){
+  return state.logo
+    ? '<img src="' + esc(state.logo) + '" alt="">'
+    : '<svg viewBox="0 0 100 100"><path d="M25 52l18 18 32-36" stroke="#161616" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function docHeaderEl(){
+  var meta = "";
+  if(state.docNo)     meta += 'เลขที่เอกสาร <b>' + esc(state.docNo) + '</b><br>';
+  if(state.rev)       meta += 'แก้ไขครั้งที่ <b>' + esc(state.rev) + '</b><br>';
+  if(state.printDate) meta += 'วันที่พิมพ์ <b>' + esc(state.printDate) + '</b>';
+  return nodeFrom(
+    '<div class="p-head">' +
+      '<div class="p-logo">' + logoHTML() + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div class="p-title">' + esc(state.title || "แบบฟอร์มตรวจสอบงานก่อสร้าง") + '</div>' +
+        (state.subtitle ? '<div class="p-sub">' + esc(state.subtitle) + '</div>' : '') +
+      '</div>' +
+      (meta ? '<div class="p-meta">' + meta + '</div>' : '') +
+    '</div>');
+}
+function labelEl(txt){ return nodeFrom('<div class="p-label">' + esc(txt) + '</div>'); }
+function infoBlockEl(){
+  var h = '<div class="p-info">';
+  INFO_FIELDS.forEach(function(f){
+    h += '<div class="p-f' + (f.wide ? " wide" : "") + '"><label>' + esc(f.l) + '</label><span>' + esc(state.info[f.k] || "") + '</span></div>';
+  });
+  return nodeFrom(h + '</div>');
+}
+function countAll(){
+  var c = {total:0, pass:0, fail:0, na:0};
+  state.sections.forEach(function(s){
+    s.items.forEach(function(i){
+      c.total++;
+      if(i.result === "pass") c.pass++; else if(i.result === "fail") c.fail++; else if(i.result === "na") c.na++;
+    });
+  });
+  c.left = c.total - c.pass - c.fail - c.na;
+  return c;
+}
+function sumBlockEl(){
+  var c = countAll();
+  return nodeFrom('<div class="p-sum">' +
+    '<div class="p-st tot"><b>' + c.total + '</b><i>รายการทั้งหมด</i></div>' +
+    '<div class="p-st"><b>' + c.pass + '</b><i>ผ่าน</i></div>' +
+    '<div class="p-st bad"><b>' + c.fail + '</b><i>ไม่ผ่าน</i></div>' +
+    '<div class="p-st"><b>' + c.na + '</b><i>N.A.</i></div>' +
+    '<div class="p-st"><b>' + c.left + '</b><i>ยังไม่ตรวจ</i></div>' +
+  '</div>');
+}
+function secBoxEl(sec, si, cont){
+  var done = sec.items.filter(function(x){ return x.result; }).length;
+  return nodeFrom('<div class="p-sec">' +
+    '<div class="p-sec-h"><span class="p-no">' + (si + 1) + '</span>' +
+      '<div class="p-sec-t">' + esc(sec.title) + (cont ? ' <span style="font-weight:400;font-size:8.5pt;color:#777">(ต่อ)</span>' : '') + '</div>' +
+      '<span class="p-sec-c">' + done + '/' + sec.items.length + ' รายการ</span></div>' +
+    '<div class="p-rh"><span>ลำดับ</span><span>รายการตรวจสอบ / เกณฑ์อ้างอิง</span><span>ผลการตรวจ</span><span>หมายเหตุ</span></div>' +
+  '</div>');
+}
+function itemRowEl(si, it, ii){
+  return nodeFrom('<div class="p-it">' +
+    '<span class="p-n">' + (si + 1) + '.' + (ii + 1) + '</span>' +
+    '<div><div class="p-t">' + esc(it.text) + '</div>' + (it.ref ? '<div class="p-r">' + esc(it.ref) + '</div>' : '') + '</div>' +
+    '<div class="p-res">' +
+      '<span class="' + (it.result === "pass" ? "on-pass" : "") + '">ผ่าน</span>' +
+      '<span class="' + (it.result === "fail" ? "on-fail" : "") + '">ไม่ผ่าน</span>' +
+      '<span class="' + (it.result === "na" ? "on-na" : "") + '">N.A.</span>' +
+    '</div>' +
+    '<div class="p-note">' + esc(it.note) + '</div>' +
+  '</div>');
+}
+function signBlockEl(){
+  var roles = [["sg1","ผู้ตรวจสอบ"], ["sg2","ผู้รับจ้าง"], ["sg3","ผู้ว่าจ้าง / ผู้ควบคุมงาน"]];
+  var h = '<div class="p-signs">';
+  roles.forEach(function(r){
+    h += '<div class="p-sign"><div class="ln"></div><div class="nm">' + esc(state.signs[r[0]] || "( ชื่อ-สกุล )") + '</div>' +
+         '<div class="rl">' + r[1] + '</div><div class="dt">วันที่ ......../......../........</div></div>';
+  });
+  return nodeFrom(h + '</div>');
+}
+function runHeaderEl(){
+  return nodeFrom('<div class="p-run"><span>' + esc(state.title || "แบบฟอร์มตรวจสอบงานก่อสร้าง") + '</span>' +
+    '<span>' + esc(state.info.project || "") + '</span></div>');
 }
 
-/* ---- Print ---- */
+function buildPrintSheets(){
+  var root = el("printRoot");
+  root.innerHTML = "";
+  var sheets = [], cur = null;
+
+  function addSheet(){
+    var s = document.createElement("div"); s.className = "sheet";
+    var body = document.createElement("div"); body.className = "sheet-body";
+    var foot = document.createElement("div"); foot.className = "sheet-foot";
+    s.appendChild(body); s.appendChild(foot);
+    root.appendChild(s);
+    /* ใส่ข้อความท้ายหน้าไว้ก่อน เพื่อให้ความสูงที่ใช้คำนวณตรงกับตอนพิมพ์จริง */
+    foot.innerHTML = '<span>' + esc(state.info.project || state.title || "") + '</span><span>หน้า 0 / 0</span>';
+    cur = {sheet:s, body:body, foot:foot};
+    sheets.push(cur);
+    if(sheets.length > 1) body.appendChild(runHeaderEl());
+    return cur;
+  }
+  function baseChildren(){ return sheets.length > 1 ? 1 : 0; }
+  function overflow(){
+    var b = cur.body;
+    if(b.scrollHeight > b.clientHeight + 1) return true;
+    var last = b.lastElementChild;
+    if(!last) return false;
+    var mb = parseFloat(getComputedStyle(last).marginBottom) || 0;   /* scrollHeight ไม่นับ margin ล่าง */
+    return (last.getBoundingClientRect().bottom + mb) > b.getBoundingClientRect().bottom + 1;
+  }
+  function fit(node){
+    cur.body.appendChild(node);
+    if(overflow()){ cur.body.removeChild(node); return false; }
+    return true;
+  }
+  function place(node){ if(!fit(node)){ addSheet(); cur.body.appendChild(node); } }
+
+  addSheet();
+  place(docHeaderEl());
+  place(labelEl("ข้อมูลโครงการ"));
+  place(infoBlockEl());
+  place(labelEl("สรุปผลการตรวจสอบ"));
+  place(sumBlockEl());
+  if(state.sections.length) place(labelEl("รายการตรวจสอบ"));
+
+  state.sections.forEach(function(sec, si){
+    var i = 0, cont = false, guard = 0;
+    while(guard++ < 300){
+      var box = secBoxEl(sec, si, cont);
+      place(box);
+      var placed = 0;
+      while(i < sec.items.length){
+        var row = itemRowEl(si, sec.items[i], i);
+        box.appendChild(row);
+        if(overflow()){ box.removeChild(row); break; }
+        i++; placed++;
+      }
+      if(i >= sec.items.length) break;
+      if(placed === 0 && cur.body.children.length > baseChildren() + 1){
+        cur.body.removeChild(box);        /* หัวหมวดค้างท้ายหน้าโดยไม่มีรายการ -> ยกไปหน้าถัดไป */
+        addSheet();
+        continue;
+      }
+      if(placed === 0 && cur.body.children.length === baseChildren() + 1){
+        box.appendChild(itemRowEl(si, sec.items[i], i));  /* รายการเดียวสูงเกินหน้า */
+        i++;
+      }
+      addSheet();
+      cont = true;
+    }
+  });
+
+  var signs = signBlockEl();
+  if(!fit(signs)){
+    signs.className = "p-signs tight";
+    place(signs);
+  }
+  place(nodeFrom('<div class="p-foot-note">เอกสารนี้จัดทำจากระบบ Checklist — ผลการตรวจสอบมีผลเฉพาะรายการและวันที่ที่ระบุไว้ข้างต้น</div>'));
+
+  sheets.forEach(function(s, idx){
+    s.foot.lastElementChild.textContent = 'หน้า ' + (idx + 1) + ' / ' + sheets.length;
+  });
+  return sheets.length;
+}
+
+/* ============ Print ============ */
 el("btnPrint").onclick = function(){
-  var tas = document.querySelectorAll("textarea");
-  for(var i=0;i<tas.length;i++){ autoGrow(tas[i]); }
-  setTimeout(function(){ window.print(); }, 60);
+  if(!state.printDate){
+    state.printDate = todayTH();
+    el("fPrintDate").value = state.printDate;
+    save();
+  }
+  buildPrintSheets();
+  setTimeout(function(){ window.print(); }, 50);
 };
+window.addEventListener("beforeprint", buildPrintSheets);
 
 /* ============ Init ============ */
 state = load();
 renderStatic();
 renderInfo();
 renderSections();
-bindLogo();
-if(!state.info.date && !state.sections.length){
-  el("in_date").placeholder = todayTH();
-}
-window.addEventListener("beforeprint", function(){
-  var tas = document.querySelectorAll("textarea");
-  for(var i=0;i<tas.length;i++){ autoGrow(tas[i]); }
-});
 </script>
 </body>
 </html>
